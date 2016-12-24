@@ -12,7 +12,7 @@ namespace EurekaUI
     {
     public:
         explicit Context();
-        Element *root(){return &mRoot;};
+        Element* root() { return &mRoot; }
     private:
         Element mRoot;
     };
