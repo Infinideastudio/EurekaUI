@@ -1,5 +1,5 @@
-#pragma once
-#pragma pack(push, 1)
+#ifndef _EUREKUAI_MATH_VECTOR_
+#define _EUREKUAI_MATH_VECTOR_
 
 #include <cmath>
 #include <algorithm>
@@ -9,12 +9,6 @@ namespace EurekaUI
 {
     namespace Math
     {
-
-        template<typename T>
-        constexpr T abs(T arg) noexcept
-        {
-            return arg >= 0 ? arg : -arg;
-        }
 
         template<size_t d, class T>
         union Vec;
@@ -139,7 +133,7 @@ namespace EurekaUI
                 (*this) /= length();
             }
 
-            T length() noexcept
+            T length() const noexcept
             {
                 return sqrt(lengthSqr());
             }
@@ -151,12 +145,12 @@ namespace EurekaUI
 
             constexpr T chebyshevDistance(const Vec &rhs) const noexcept
             {
-                return std::max(abs(x - rhs.x), abs(y - rhs.y));
+                return std::max(std::abs(x - rhs.x), std::abs(y - rhs.y));
             }
 
             constexpr T manhattanDistance(const Vec &rhs) const noexcept
             {
-                return abs(x - rhs.x) + abs(y - rhs.y);
+                return std::abs(x - rhs.x) + std::abs(y - rhs.y);
             }
         };
 
@@ -297,7 +291,7 @@ namespace EurekaUI
                 return x * r.x + y * r.y + z * r.z;
             }
 
-            T length() noexcept
+            T length() const noexcept
             {
                 return sqrt(lengthSqr());
             }
@@ -320,12 +314,12 @@ namespace EurekaUI
 
             constexpr T chebyshevDistance(const Vec &rhs) const noexcept
             {
-                return std::max(std::max(abs(x - rhs.x), abs(y - rhs.y)), abs(z - rhs.z));
+                return std::max(std::max(std::abs(x - rhs.x), std::abs(y - rhs.y)), std::abs(z - rhs.z));
             }
 
             constexpr T manhattanDistance(const Vec &rhs) const noexcept
             {
-                return abs(x - rhs.x) + abs(y - rhs.y) + abs(z - rhs.z);
+                return std::abs(x - rhs.x) + std::abs(y - rhs.y) + std::abs(z - rhs.z);
             }
         };
 
@@ -468,7 +462,7 @@ namespace EurekaUI
                 (*this) /= length();
             }
 
-            T length() noexcept
+            T length() const noexcept
             {
                 return sqrt(lengthSqr());
             }
@@ -480,12 +474,12 @@ namespace EurekaUI
 
             constexpr T chebyshevDistance(const Vec &rhs) const noexcept
             {
-                return std::max(std::max(std::max(abs(x - rhs.x), abs(y - rhs.y)), abs(z - rhs.z)), abs(t - rhs.t));
+                return std::max(std::max(std::max(std::abs(x - rhs.x), std::abs(y - rhs.y)), std::abs(z - rhs.z)), std::abs(t - rhs.t));
             }
 
             constexpr T manhattanDistance(const Vec &rhs) const noexcept
             {
-                return abs(x - rhs.x) + abs(y - rhs.y) + abs(z - rhs.z) + abs(t - rhs.t);
+                return std::abs(x - rhs.x) + std::abs(y - rhs.y) + std::abs(z - rhs.z) + std::abs(t - rhs.t);
             }
         };
 
@@ -494,11 +488,13 @@ namespace EurekaUI
         using Vec2d = Vec<2, double>;
         template<class T>
         using Vec2 = Vec<2, T>;
+
         using Vec3i = Vec<3, int>;
         using Vec3f = Vec<3, float>;
         using Vec3d = Vec<3, double>;
         template<class T>
         using Vec3 = Vec<3, T>;
+
         using Vec4i = Vec<4, int>;
         using Vec4f = Vec<4, float>;
         using Vec4d = Vec<4, double>;
@@ -633,7 +629,7 @@ namespace EurekaUI
                 (*this) /= length();
             }
 
-            T length()
+            T length() const noexcept
             {
                 return sqrt(lengthSqr());
             }
@@ -645,15 +641,15 @@ namespace EurekaUI
 
             constexpr T chebyshevDistance(const Vec &rhs) const noexcept
             {
-                return std::max(less.chebyshevDistance(rhs.less), abs(last - rhs.last));
+                return std::max(less.chebyshevDistance(rhs.less), std::abs(last - rhs.last));
             }
 
             constexpr T manhattanDistance(const Vec &rhs) const noexcept
             {
-                return less.manhattanDistance(rhs.less) + abs(last - rhs.last);
+                return less.manhattanDistance(rhs.less) + std::abs(last - rhs.last);
             }
         };
     }
 }
 
-#pragma pack(pop)
+#endif
