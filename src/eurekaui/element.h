@@ -24,7 +24,7 @@ namespace EurekaUI
         };
 
         template<class T, class... Ts>
-        T *createChild(const std::string &id, Ts &&... args)
+        T *createChildWithId(const std::string &id, Ts &&... args)
         {
             assert(mChildrenById.find(id) == mChildrenById.end());
             T *newEle = new T(*this, std::forward<Ts>(args)...);
