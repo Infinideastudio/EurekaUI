@@ -3,7 +3,7 @@
 namespace EurekaUI
 {
     Context::Context()
-        :mRoot(nullptr)
+            : mRoot(nullptr)
     {
     }
     

@@ -15,26 +15,29 @@ namespace EurekaUI
     {
         friend class Context;
     public:
-        template<class T> Element* createChild()
+        template<class T, class... Ts>
+        T *createChild(Ts &&... args)
         {
-            Element* e = new T(*this);
-            mChildren.push_back(e);
-            return e;
+            T *newEle = new T(*this, std::forward<Ts>(args)...);
+            mChildren.push_back(newEle);
+            return newEle;
         };
-        
-        template<class T> Element* createChild(const std::string& id)
+
+        template<class T, class... Ts>
+        T *createChild(const std::string &id, Ts &&... args)
         {
             assert(mChildrenById.find(id) == mChildrenById.end());
-            Element* e = createChild<T>();
-            mChildrenById[id] = e;
-            return e;
+            T *newEle = new T(*this, std::forward<Ts>(args)...);
+            mChildren.push_back(newEle);
+            mChildrenById.insert(std::pair<std::string, Element *>(id, newEle));
+            return newEle;
         }
-        
+
         Element* getParent() const noexcept { return mParent; }
     private:
-        explicit Element(Element* parent);
+        explicit Element(Element *parent);
         ~Element();
-        
+
         Element* mParent;
         std::list<Element*> mChildren;
         std::unordered_map<std::string, Element*> mChildrenById;

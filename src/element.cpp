@@ -3,7 +3,7 @@
 namespace EurekaUI
 {
     Element::Element(Element *parent)
-        :mParent(parent)
+            : mParent(parent)
     {
     }
     
