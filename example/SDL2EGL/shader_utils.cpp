@@ -137,19 +137,6 @@ GLuint CompileProgramWithTransformFeedback(
     glAttachShader(program, fs);
     glDeleteShader(fs);
 
-    if (transformFeedbackVaryings.size() > 0)
-    {
-        std::vector<const char *> constCharTFVaryings;
-
-        for (const std::string &transformFeedbackVarying : transformFeedbackVaryings)
-        {
-            constCharTFVaryings.push_back(transformFeedbackVarying.c_str());
-        }
-
-        glTransformFeedbackVaryings(program, static_cast<GLsizei>(transformFeedbackVaryings.size()),
-                                    &constCharTFVaryings[0], bufferMode);
-    }
-
     glLinkProgram(program);
 
     return CheckLinkStatusAndReturnProgram(program, true);
@@ -171,29 +158,4 @@ GLuint CompileProgramFromFiles(const std::string &vsPath, const std::string &fsP
     }
 
     return CompileProgram(vsSource, fsSource);
-}
-
-GLuint CompileComputeProgram(const std::string &csSource, bool outputErrorMessages)
-{
-    GLuint program = glCreateProgram();
-
-    GLuint cs = CompileShader(GL_COMPUTE_SHADER, csSource);
-    if (cs == 0)
-    {
-        glDeleteProgram(program);
-        return 0;
-    }
-
-    glAttachShader(program, cs);
-
-    glLinkProgram(program);
-
-    return CheckLinkStatusAndReturnProgram(program, outputErrorMessages);
-}
-
-GLuint LoadBinaryProgramES3(const std::vector<uint8_t> &binary, GLenum binaryFormat)
-{
-    GLuint program = glCreateProgram();
-    glProgramBinary(program, binaryFormat, binary.data(), static_cast<GLint>(binary.size()));
-    return CheckLinkStatusAndReturnProgram(program, true);
 }

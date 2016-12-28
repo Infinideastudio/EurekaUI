@@ -3,17 +3,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
+#pragma once
 
-#ifndef SAMPLE_UTIL_SHADER_UTILS_H
-#define SAMPLE_UTIL_SHADER_UTILS_H
-
-#include <GLES3/gl31.h>
-#include <GLES3/gl3.h>
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
-
+#include "GLES2.h"
 #include <string>
 #include <vector>
 
@@ -32,10 +24,3 @@ CompileProgramWithTransformFeedback(const std::string &vsSource,
 GLuint CompileProgram(const std::string &vsSource, const std::string &fsSource);
 
 GLuint CompileProgramFromFiles(const std::string &vsPath, const std::string &fsPath);
-
-GLuint CompileComputeProgram(const std::string &csSource,
-                             bool outputErrorMessages = true);
-
-GLuint LoadBinaryProgramES3(const std::vector<uint8_t> &binary, GLenum binaryFormat);
-
-#endif // SAMPLE_UTIL_SHADER_UTILS_H

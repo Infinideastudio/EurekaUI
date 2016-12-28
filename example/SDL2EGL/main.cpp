@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
-#include <GLES2/gl2.h>
 #include <iostream>
+#include "GLES2.h"
 #include "shader_utils.h"
 
 SDL_Window *win;
@@ -90,8 +90,11 @@ int main(int argc, char *argv[])
     SDL_Init(0);
     HelloTriangleSample sample;
     InitVideoDriver();
+    LoadFuncs(); // Solve The Linking Problems on Some Platforms
     sample.initialize();
-    std::cout << glGetString(GL_VERSION) << std::endl;
+    std::cout << glGetString(GL_VERSION) << std::endl << 
+        glGetString(GL_VENDOR) << std::endl << 
+        glGetString(GL_EXTENSIONS) << std::endl;
     bool done = false;
     while (!done)
     {

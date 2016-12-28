@@ -9,11 +9,14 @@ if (CMAKE_SYSTEM_NAME MATCHES Darwin)
 endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
-    link_libraries("opengl32")
+    link_libraries()
+    add_definitions(-DDO_GET_GETFUNCTIONS)
+    link_libraries(SDL2)
+else()
+    link_libraries(SDL2 GLESv2 EGL)
 endif ()
 
+add_definitions(-DSDL_MAIN_HANDLED)
 aux_source_directory(./ SRC_HW)
-
-link_libraries(SDL2 GLESv2 EGL)
 
 add_executable(SDLEGL2 ${SRC_HW})

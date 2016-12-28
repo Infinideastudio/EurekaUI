@@ -15,4 +15,3 @@ endif ()
 link_libraries(SDL2 GLEW eurekaui)
 
 add_executable(helloworld helloworld.cpp)
-add_subdirectory(SDL2EGL)
