@@ -12,6 +12,6 @@ if (CMAKE_SYSTEM_NAME MATCHES Windows)
     link_libraries("opengl32")
 endif ()
 
-link_libraries(SDL2 GLEW eurekaui)
+link_libraries(eurekaui)
 
 add_executable(helloworld helloworld.cpp)

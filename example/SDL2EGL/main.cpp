@@ -1,5 +1,7 @@
 #include <SDL2/SDL.h>
 #include <iostream>
+#include <sstream>
+#include <string>
 #include "GLES2.h"
 #include "shader_utils.h"
 
@@ -11,11 +13,26 @@ void InitVideoDriver()
     SDL_Init(SDL_INIT_VIDEO);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+#ifdef SDL_VIDEO_OPENGL_ES2
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+#endif
     win = SDL_CreateWindow("", 400, 400, 400, 400, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
     ctx = SDL_GL_CreateContext(win);
 }
 
+std::string filterEXT()
+{
+    std::stringstream ss;
+    std::string ret = "";
+    ss << glGetString(GL_EXTENSIONS);
+    while (!ss.eof())
+    {
+        std::string s;
+        ss >> s;
+        if (s.substr(0, 6) == "GL_ARB") ret += s + ' ';
+    }
+    return ret;
+}
 
 class HelloTriangleSample
 {
@@ -33,7 +50,9 @@ public:
                         "}";
 
         const std::string fs =
-                "precision mediump float;"
+#ifdef SDL_VIDEO_OPENGL_ES2
+               "precision mediump float;"
+#endif
                         "void main()"
                         "{"
                         "gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);"
@@ -94,7 +113,7 @@ int main(int argc, char *argv[])
     sample.initialize();
     std::cout << glGetString(GL_VERSION) << std::endl << 
         glGetString(GL_VENDOR) << std::endl << 
-        glGetString(GL_EXTENSIONS) << std::endl;
+        filterEXT() << std::endl;
     bool done = false;
     while (!done)
     {

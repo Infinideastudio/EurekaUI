@@ -1,5 +1,5 @@
-#include <SDL2/SDL.h>
 #include "GLES2.h"
+#include <SDL2/SDL.h>
 #ifdef DO_GET_GETFUNCTIONS
 PFNGLGETSHADERIVPROC glGetShaderiv;
 PFNGLDELETESHADERPROC glDeleteShader;
