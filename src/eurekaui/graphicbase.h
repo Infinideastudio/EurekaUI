@@ -1,5 +1,6 @@
 #pragma once
 #include "common/concepts.h"
+#include <cstdlib>
 
 namespace EurekaUI
 {
