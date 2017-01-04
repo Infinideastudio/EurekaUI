@@ -20,5 +20,6 @@ endif ()
 
 add_definitions(-DSDL_MAIN_HANDLED)
 aux_source_directory(./ SRC_HW)
+link_libraries(eurekaui)
 
 add_executable(SDLEGL2 ${SRC_HW})

@@ -51,8 +51,8 @@ namespace EurekaUI
                               DataFormat type, const void *data)
         {
             bind();
-            fTexImage2D(GL_TEXTURE_2D, MipmapLevel, static_cast<size_t>(internalformat),
-                        width, height, 0, static_cast<size_t>(format), static_cast<size_t>(type), data);
+            fTexImage2D(GL_TEXTURE_2D, MipmapLevel, static_cast<unsigned int>(internalformat),
+                        width, height, 0, static_cast<unsigned int>(format), static_cast<unsigned int>(type), data);
         }
 
 
@@ -61,8 +61,8 @@ namespace EurekaUI
                                  const void *pixels)
         {
             bind();
-            fTexSubImage2D(GL_TEXTURE_2D, level, xoffset, yoffset, width, height, static_cast<size_t>(format),
-                           static_cast<size_t>(type), pixels);
+            fTexSubImage2D(GL_TEXTURE_2D, level, xoffset, yoffset, width, height, static_cast<unsigned int>(format),
+                           static_cast<unsigned int>(type), pixels);
         }
 
         void
@@ -70,21 +70,21 @@ namespace EurekaUI
                                    const void *data)
         {
             bind();
-            fCompressedTexImage2D(GL_TEXTURE_2D, level, static_cast<size_t>(internalformat), width, height, 0, imageSize, data);
+            fCompressedTexImage2D(GL_TEXTURE_2D, level, static_cast<unsigned int>(internalformat), width, height, 0, imageSize, data);
         }
 
         void Texture::texSubDataCompressed(int level, int xoffset, int yoffset, size_t width, size_t height,
                                            PixFormat format, size_t imageSize, const void *data)
         {
             bind();
-            fCompressedTexSubImage2D(GL_TEXTURE_2D, level, xoffset, yoffset, width, height, static_cast<size_t>(format), imageSize, data);
+            fCompressedTexSubImage2D(GL_TEXTURE_2D, level, xoffset, yoffset, width, height, static_cast<unsigned int>(format), imageSize, data);
         }
 
 
         void Texture::copyTexData(int level, PixFormat internalformat, int x, int y, size_t width, size_t height)
         {
             bind();
-            fCopyTexImage2D(GL_TEXTURE_2D, level, static_cast<size_t>(internalformat), x, y, width, height, 0);
+            fCopyTexImage2D(GL_TEXTURE_2D, level, static_cast<unsigned int>(internalformat), x, y, width, height, 0);
         }
 
         void Texture::copyTexSubData(int level, int xoffset, int yoffset, int x, int y, size_t width, size_t height)
@@ -126,17 +126,16 @@ namespace EurekaUI
         //////////////////////////////
         // End Texture Object
         //////////////////////////////
-
-        std::function<void* __stdcall(const char*)> fGLGetFunction = nullptr;
-
+        std::function<void* (const char*)> fGLGetFunction;
         template <class T>
         inline T getGLFunc(const char* name)
         {
             return reinterpret_cast<T>(fGLGetFunction(name));
         }
 
-        void coInitialize()
+        void coInitialize(std::function<void* (const char*)> function)
         {
+            fGLGetFunction = function;
             fTexImage2D = getGLFunc<PFNGLTEXIMAGE2DPROC>("glTexImage2D");
             fTexSubImage2D = getGLFunc<PFNGLTEXSUBIMAGE2DPROC>("glTexSubImage2D");
             fCompressedTexImage2D = getGLFunc<PFNGLCOMPRESSEDTEXIMAGE2DPROC>("glCompressedTexImage2D");

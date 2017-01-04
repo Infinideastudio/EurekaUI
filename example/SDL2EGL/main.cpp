@@ -4,6 +4,7 @@
 #include <string>
 #include "GLES2.h"
 #include "shader_utils.h"
+#include <eurekaui/eurekaui.h>
 
 SDL_Window *win;
 SDL_GLContext ctx;
@@ -107,8 +108,9 @@ private:
 int main(int argc, char *argv[])
 {
     SDL_Init(0);
-    HelloTriangleSample sample;
     InitVideoDriver();
+    EurekaUI::Context context(SDL_GL_GetProcAddress);
+    HelloTriangleSample sample;
     LoadFuncs(); // Solve The Linking Problems on Some Platforms
     sample.initialize();
     std::cout << glGetString(GL_VERSION) << std::endl << 

@@ -9,16 +9,11 @@ namespace EurekaUI
         class Texture : public Noncopyable
         {
         public:
-            Texture();
-            Texture(Texture&& rhs) : mHandle(rhs.mHandle) { rhs.mHandle = 0; }
-            Texture& operator = (Texture&& rhs) { mHandle = rhs.mHandle; rhs.mHandle = 0; }
-            ~Texture();
-
-            enum class PixFormat : size_t
+            enum class PixFormat : unsigned int
             {
                 Alpha = 0x1906, RGB, RGBA, Luminance, LuminanceAlpha
             };
-            enum class DataFormat : size_t
+            enum class DataFormat : unsigned int
             {
                 UByte = 0x1401, UShort4444 = 0x8033, UShort5551, UShort565
             };
@@ -35,37 +30,27 @@ namespace EurekaUI
             {
                 Nearest = 0x2600, Linear
             };
-
+            Texture();
+            Texture(Texture&& rhs) : mHandle(rhs.mHandle) { rhs.mHandle = 0; }
+            Texture& operator = (Texture&& rhs) { mHandle = rhs.mHandle; rhs.mHandle = 0; }
+            ~Texture();
             static void activeTex(int ID);
-
             void bind();
-
             void texData(int MipmapLevel, PixFormat internalformat, size_t width, size_t height, PixFormat format,
                          DataFormat type, const void *data);
-
             void texSubData(int level, int xoffset, int yoffset, size_t width, size_t height, PixFormat format,
                             DataFormat type, const void *pixels);
-
-
             void texDataCompressed(int level, PixFormat internalformat, size_t width, size_t height, size_t imageSize,
                                    const void *data);
-
             void
             texSubDataCompressed(int level, int xoffset, int yoffset, size_t width, size_t height, PixFormat format,
                                  size_t imageSize, const void *data);
-
             void copyTexData(int level, PixFormat internalformat, int x, int y, size_t width, size_t height);
-
             void copyTexSubData(int level, int xoffset, int yoffset, int x, int y, size_t width, size_t height);
-
             void setWarpS(WarpMode mode);
-
             void setWarpT(WarpMode mode);
-
             void setMinFilter(MinFilter filter);
-
             void setMagFilter(MagFilter filter);
-
             void generateMipmap();
         private:
             unsigned int mHandle;
