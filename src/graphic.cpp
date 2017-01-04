@@ -1,19 +1,27 @@
 #include "eurekaui/graphic.h"
+#include "GLES2/gl2.h"
+#include <functional>
 
 namespace EurekaUI
 {
     namespace GraphicLib
     {
-        Texture::TexImage2D *Texture::fTexImage2D = nullptr;
-        Texture::TexSubImage2D *Texture::fTexSubImage2D = nullptr;
-        Texture::CompressedTexImage2D *Texture::fCompressedTexImage2D = nullptr;
-        Texture::CompressedTexSubImage2D *Texture::fCompressedTexSubImage2D = nullptr;
-        Texture::ActiveTexture *Texture::fActiveTexture = nullptr;
-        Texture::BindTexture *Texture::fBindTexture = nullptr;
-        Texture::CopyTexImage2D *Texture::fCopyTexImage2D = nullptr;
-        Texture::GenTextures *Texture::fGenTextures = nullptr;
-        Texture::DeleteTextures *Texture::fDeleteTextures = nullptr;
-
+        //////////////////////////////
+        // Begin Texture Object
+        //////////////////////////////
+        static GLuint gCurrentTex = 0;
+        PFNGLTEXIMAGE2DPROC fTexImage2D = nullptr;
+        PFNGLTEXSUBIMAGE2DPROC fTexSubImage2D = nullptr;
+        PFNGLCOMPRESSEDTEXIMAGE2DPROC fCompressedTexImage2D = nullptr;
+        PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC fCompressedTexSubImage2D = nullptr;
+        PFNGLACTIVETEXTUREPROC fActiveTexture = nullptr;
+        PFNGLBINDTEXTUREPROC fBindTexture = nullptr;
+        PFNGLCOPYTEXIMAGE2DPROC fCopyTexImage2D = nullptr;
+        PFNGLCOPYTEXSUBIMAGE2DPROC fCopyTexSubImage2D = nullptr;
+        PFNGLTEXPARAMETERIPROC fTexParameteri = nullptr;
+        PFNGLGENERATEMIPMAPPROC fGenerateMipmap = nullptr;
+        PFNGLGENTEXTURESPROC fGenTextures = nullptr;
+        PFNGLDELETETEXTURESPROC fDeleteTextures = nullptr;
 
         Texture::Texture()
         {
@@ -22,23 +30,28 @@ namespace EurekaUI
 
         Texture::~Texture()
         {
-            fDeleteTextures(1, &mHandle);
+            if (mHandle != 0) fDeleteTextures(1, &mHandle);
         }
 
         void Texture::activeTex(int ID)
         {
-            fActiveTexture(0x84C0 + ID);
+            fActiveTexture(GL_TEXTURE0 + ID);
         }
 
         void Texture::bind()
         {
-            fBindTexture(0x0DE1, mHandle);
+            if (gCurrentTex != mHandle) 
+            {
+                fBindTexture(GL_TEXTURE_2D, mHandle); 
+                gCurrentTex = mHandle;
+            }
         }
 
         void Texture::texData(int MipmapLevel, PixFormat internalformat, size_t width, size_t height, PixFormat format,
                               DataFormat type, const void *data)
         {
-            fTexImage2D(mHandle, MipmapLevel, static_cast<size_t>(internalformat),
+            bind();
+            fTexImage2D(GL_TEXTURE_2D, MipmapLevel, static_cast<size_t>(internalformat),
                         width, height, 0, static_cast<size_t>(format), static_cast<size_t>(type), data);
         }
 
@@ -47,7 +60,8 @@ namespace EurekaUI
                                  size_t width, size_t height, PixFormat format, DataFormat type,
                                  const void *pixels)
         {
-            fTexSubImage2D(mHandle, level, xoffset, yoffset, width, height, static_cast<size_t>(format),
+            bind();
+            fTexSubImage2D(GL_TEXTURE_2D, level, xoffset, yoffset, width, height, static_cast<size_t>(format),
                            static_cast<size_t>(type), pixels);
         }
 
@@ -55,19 +69,86 @@ namespace EurekaUI
         Texture::texDataCompressed(int level, PixFormat internalformat, size_t width, size_t height, size_t imageSize,
                                    const void *data)
         {
-            fCompressedTexImage2D(mHandle, level, static_cast<size_t>(internalformat), width, height, 0, imageSize, data);
+            bind();
+            fCompressedTexImage2D(GL_TEXTURE_2D, level, static_cast<size_t>(internalformat), width, height, 0, imageSize, data);
         }
 
         void Texture::texSubDataCompressed(int level, int xoffset, int yoffset, size_t width, size_t height,
                                            PixFormat format, size_t imageSize, const void *data)
         {
-            fCompressedTexSubImage2D(mHandle, level, xoffset, yoffset, width, height, static_cast<size_t>(format), imageSize, data);
+            bind();
+            fCompressedTexSubImage2D(GL_TEXTURE_2D, level, xoffset, yoffset, width, height, static_cast<size_t>(format), imageSize, data);
         }
 
 
         void Texture::copyTexData(int level, PixFormat internalformat, int x, int y, size_t width, size_t height)
         {
-            fCopyTexImage2D(mHandle, level, static_cast<size_t>(internalformat), x, y, width, height, 0);
+            bind();
+            fCopyTexImage2D(GL_TEXTURE_2D, level, static_cast<size_t>(internalformat), x, y, width, height, 0);
+        }
+
+        void Texture::copyTexSubData(int level, int xoffset, int yoffset, int x, int y, size_t width, size_t height)
+        {
+            bind();
+            fCopyTexSubImage2D(GL_TEXTURE_2D, level, xoffset, yoffset, x, y, width, height);
+        }
+
+        void Texture::setWarpS(WarpMode mode)
+        {
+            bind();
+            fTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<int>(mode));
+        }
+
+        void Texture::setWarpT(WarpMode mode)
+        {
+            bind();
+            fTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<int>(mode));
+        }
+
+        void Texture::setMinFilter(MinFilter filter)
+        {
+            bind();
+            fTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<int>(filter));
+        }
+
+        void Texture::setMagFilter(MagFilter filter)
+        {
+            bind();
+            fTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<int>(filter));
+        }
+
+        void Texture::generateMipmap()
+        {
+            bind();
+            fGenerateMipmap(GL_TEXTURE_2D);
+        }
+
+        //////////////////////////////
+        // End Texture Object
+        //////////////////////////////
+
+        std::function<void* __stdcall(const char*)> fGLGetFunction = nullptr;
+
+        template <class T>
+        inline T getGLFunc(const char* name)
+        {
+            return reinterpret_cast<T>(fGLGetFunction(name));
+        }
+
+        void coInitialize()
+        {
+            fTexImage2D = getGLFunc<PFNGLTEXIMAGE2DPROC>("glTexImage2D");
+            fTexSubImage2D = getGLFunc<PFNGLTEXSUBIMAGE2DPROC>("glTexSubImage2D");
+            fCompressedTexImage2D = getGLFunc<PFNGLCOMPRESSEDTEXIMAGE2DPROC>("glCompressedTexImage2D");
+            fCompressedTexSubImage2D = getGLFunc<PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC>("glCompressedTexSubImage2D");
+            fActiveTexture = getGLFunc<PFNGLACTIVETEXTUREPROC>("glActiveTexture");
+            fBindTexture = getGLFunc<PFNGLBINDTEXTUREPROC>("glBindTexture");
+            fCopyTexImage2D = getGLFunc<PFNGLCOPYTEXIMAGE2DPROC>("glCopyTexImage2D");
+            fCopyTexSubImage2D = getGLFunc<PFNGLCOPYTEXSUBIMAGE2DPROC>("glCopyTexSubImage2D");
+            fTexParameteri = getGLFunc<PFNGLTEXPARAMETERIPROC>("glTexParameteri");
+            fGenerateMipmap = getGLFunc<PFNGLGENERATEMIPMAPPROC>("glGenerateMipmap");
+            fGenTextures = getGLFunc<PFNGLGENTEXTURESPROC>("glGenTextures");
+            fDeleteTextures = getGLFunc<PFNGLDELETETEXTURESPROC>("glDeleteTextures");
         }
 
     }

@@ -42,10 +42,6 @@ extern "C" {
 #define GL_APIENTRYP GL_APIENTRY*
 #endif
 
-#ifndef GL_GLES_PROTOTYPES
-#define GL_GLES_PROTOTYPES 1
-#endif
-
 /* Generated on date 20161024 */
 
 /* Generated C header for:
@@ -524,7 +520,7 @@ typedef void (GL_APIENTRYP PFNGLVERTEXATTRIB4FPROC) (GLuint index, GLfloat x, GL
 typedef void (GL_APIENTRYP PFNGLVERTEXATTRIB4FVPROC) (GLuint index, const GLfloat *v);
 typedef void (GL_APIENTRYP PFNGLVERTEXATTRIBPOINTERPROC) (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer);
 typedef void (GL_APIENTRYP PFNGLVIEWPORTPROC) (GLint x, GLint y, GLsizei width, GLsizei height);
-/*#if GL_GLES_PROTOTYPES
+#if GL_GLES_PROTOTYPES
 GL_APICALL void GL_APIENTRY glActiveTexture (GLenum texture);
 GL_APICALL void GL_APIENTRY glAttachShader (GLuint program, GLuint shader);
 GL_APICALL void GL_APIENTRY glBindAttribLocation (GLuint program, GLuint index, const GLchar *name);
@@ -667,7 +663,7 @@ GL_APICALL void GL_APIENTRY glVertexAttrib4f (GLuint index, GLfloat x, GLfloat y
 GL_APICALL void GL_APIENTRY glVertexAttrib4fv (GLuint index, const GLfloat *v);
 GL_APICALL void GL_APIENTRY glVertexAttribPointer (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer);
 GL_APICALL void GL_APIENTRY glViewport (GLint x, GLint y, GLsizei width, GLsizei height);
-#endif*/
+#endif
 #endif /* GL_ES_VERSION_2_0 */
 
 #ifdef __cplusplus
