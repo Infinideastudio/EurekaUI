@@ -2,15 +2,9 @@
 
 namespace EurekaUI
 {
-    namespace GraphicLib
-    {
-        void coInitialize(std::function<void* (const char*)> fGLGetFunction);
-    }
-
-    Context::Context(std::function<void* (const char*)> fGLGetFunction)
+    Context::Context()
             : mRoot(nullptr)
     {
-        GraphicLib::coInitialize(fGLGetFunction);
     }
     
 }

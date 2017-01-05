@@ -30,30 +30,25 @@ namespace EurekaUI
             {
                 Nearest = 0x2600, Linear
             };
-            Texture();
-            Texture(Texture&& rhs) : mHandle(rhs.mHandle) { rhs.mHandle = 0; }
-            Texture& operator = (Texture&& rhs) { mHandle = rhs.mHandle; rhs.mHandle = 0; }
-            ~Texture();
-            static void activeTex(int ID);
-            void bind();
-            void texData(int MipmapLevel, PixFormat internalformat, size_t width, size_t height, PixFormat format,
-                         DataFormat type, const void *data);
-            void texSubData(int level, int xoffset, int yoffset, size_t width, size_t height, PixFormat format,
-                            DataFormat type, const void *pixels);
-            void texDataCompressed(int level, PixFormat internalformat, size_t width, size_t height, size_t imageSize,
-                                   const void *data);
-            void
+            virtual void bind() = 0;
+            virtual void texData(int MipmapLevel, PixFormat internalformat, size_t width, size_t height, PixFormat format,
+                         DataFormat type, const void *data) = 0;
+            virtual void texSubData(int level, int xoffset, int yoffset, size_t width, size_t height, PixFormat format,
+                            DataFormat type, const void *pixels) = 0;
+            virtual void texDataCompressed(int level, PixFormat internalformat, size_t width, size_t height, size_t imageSize,
+                                   const void *data) = 0;
+            virtual void
             texSubDataCompressed(int level, int xoffset, int yoffset, size_t width, size_t height, PixFormat format,
-                                 size_t imageSize, const void *data);
-            void copyTexData(int level, PixFormat internalformat, int x, int y, size_t width, size_t height);
-            void copyTexSubData(int level, int xoffset, int yoffset, int x, int y, size_t width, size_t height);
-            void setWarpS(WarpMode mode);
-            void setWarpT(WarpMode mode);
-            void setMinFilter(MinFilter filter);
-            void setMagFilter(MagFilter filter);
-            void generateMipmap();
-        private:
-            unsigned int mHandle;
+                                 size_t imageSize, const void *data) = 0;
+            virtual void copyTexData(int level, PixFormat internalformat, int x, int y, size_t width, size_t height) = 0;
+            virtual void copyTexSubData(int level, int xoffset, int yoffset, int x, int y, size_t width, size_t height) = 0;
+            virtual void setWarpS(WarpMode mode) = 0;
+            virtual void setWarpT(WarpMode mode) = 0;
+            virtual void setMinFilter(MinFilter filter) = 0;
+            virtual void setMagFilter(MagFilter filter) = 0;
+            virtual void generateMipmap();
+        protected:
+            virtual ~Texture() {}
         };
 
         class FrameBuffer : public Noncopyable, public Nonmoveable
@@ -80,18 +75,14 @@ namespace EurekaUI
         protected:
         };
 
-        class Context : public Noncopyable, public Nonmoveable
+        class Driver : public Noncopyable
         {
         public:
-            void activeTexture(size_t i)
-            {}
-
+            virtual void activeTexture(size_t i) = 0;
+            virtual Texture* createTexture() = 0;
+            virtual void deleteTexture(Texture* tex) = 0;
         protected:
-            constexpr Context()
-            {}
-
-            ~Context()
-            {}
+            virtual ~Driver() {}
         };
     }
 }

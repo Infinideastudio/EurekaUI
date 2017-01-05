@@ -1,7 +1,5 @@
-#ifndef EUREKAUI_CONTEXT_H
-#define EUREKAUI_CONTEXT_H
+#pragma once
 #include <vector>
-#include <functional>
 #include "element.h"
 
 namespace EurekaUI
@@ -12,11 +10,9 @@ namespace EurekaUI
     class Context
     {
     public:
-        explicit Context(std::function<void* (const char*)> fGLGetFunction);
+        explicit Context();
         Element* root() { return &mRoot; }
     private:
         Element mRoot;
     };
 }
-
-#endif

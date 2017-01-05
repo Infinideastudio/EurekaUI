@@ -1,5 +1,4 @@
-#ifndef EUREKAUI_ELEMENT_H
-#define EUREKAUI_ELEMENT_H
+#pragma once
 #include <unordered_map>
 #include <string>
 #include <list>
@@ -43,5 +42,3 @@ namespace EurekaUI
         std::unordered_map<std::string, Element*> mChildrenById;
     };
 }
-
-#endif

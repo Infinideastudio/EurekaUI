@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 {
     SDL_Init(0);
     InitVideoDriver();
-    EurekaUI::Context context(SDL_GL_GetProcAddress);
+    EurekaUI::Context context();
     HelloTriangleSample sample;
     LoadFuncs(); // Solve The Linking Problems on Some Platforms
     sample.initialize();
