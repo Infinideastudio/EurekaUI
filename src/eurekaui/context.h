@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "element.h"
+#include "drivers/video/base.h"
 
 namespace EurekaUI
 {

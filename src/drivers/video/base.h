@@ -1,9 +1,10 @@
 #pragma once
-#include "common/concepts.h"
+#include "./../../eurekaui/common/concepts.h"
 #include <cstdlib>
 
 namespace EurekaUI
 {
+    enum class GraphicType { OES };
     namespace GraphicLib
     {
         class Texture : public Noncopyable
@@ -46,7 +47,7 @@ namespace EurekaUI
             virtual void setWarpT(WarpMode mode) = 0;
             virtual void setMinFilter(MinFilter filter) = 0;
             virtual void setMagFilter(MagFilter filter) = 0;
-            virtual void generateMipmap();
+            virtual void generateMipmap() = 0;
         protected:
             virtual ~Texture() {}
         };
@@ -84,5 +85,7 @@ namespace EurekaUI
         protected:
             virtual ~Driver() {}
         };
+
+        Driver* InitDriver(GraphicType type, void* dat);
     }
 }

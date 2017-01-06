@@ -1,4 +1,4 @@
-#include "../../eurekaui/graphic.h"
+#include "base.h"
 #include "GLES2/gl2.h"
 #include <functional>
 
@@ -22,14 +22,15 @@ namespace EurekaUI
             PFNGLGENERATEMIPMAPPROC fGenerateMipmap = nullptr;
             PFNGLGENTEXTURESPROC fGenTextures = nullptr;
             PFNGLDELETETEXTURESPROC fDeleteTextures = nullptr;
+            using tGetter = void* (const char*);
             template <class T>
             inline T getGLFunc(const char* name)
             {
-                return reinterpret_cast<T>(fGLGetFunction(name));
+                return reinterpret_cast<T>(mGetter(name));
             }
 
-            DriverOES(std::function<void* (const char*)> function)
-                :fGLGetFunction(function)
+            DriverOES(tGetter* function)
+                :mGetter(function)
             {
                 // Texture
                 fTexImage2D = getGLFunc<PFNGLTEXIMAGE2DPROC>("glTexImage2D");
@@ -176,9 +177,13 @@ namespace EurekaUI
             //////////////////////////////
 
         private:
-            std::function<void* (const char*)> fGLGetFunction;
+            tGetter* mGetter;
         };
 
+        Driver* InitDriverOES(void* dat)
+        {
+            return new DriverOES(reinterpret_cast<DriverOES::tGetter*>(dat));
+        }
 
     }
 }
