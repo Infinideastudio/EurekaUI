@@ -71,7 +71,7 @@ namespace EurekaUI
 
                 TextureOES(TextureOES&& rhs) : mHandle(rhs.mHandle) { rhs.mHandle = 0; }
 
-                TextureOES& operator = (TextureOES&& rhs) { mHandle = rhs.mHandle; rhs.mHandle = 0; }
+                TextureOES& operator = (TextureOES&& rhs) { mHandle = rhs.mHandle; rhs.mHandle = 0; return rhs;}
 
                 void bind() override
                 {

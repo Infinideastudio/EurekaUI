@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
     SDL_Init(0);
     InitVideoDriver();
     EurekaUI::Context context;
-    EurekaUI::Element *element = context.root()->createChild<EurekaUI::Element>();
+    EurekaUI::Element &element = context.root()->createChild<EurekaUI::Element>();
     HelloTriangleSample sample;
     LoadFuncs(); // Solve The Linking Problems on Some Platforms
     sample.initialize();
